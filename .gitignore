@@ -1,0 +1,30 @@
+# Local fast-storage symlinks (point into $RAR_LOCAL)
+.venv/
+data
+checkpoints
+outputs
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.mypy_cache/
+.ruff_cache/
+
+# uv
+uv.lock.bak
+
+# Slurm logs (the directory itself is kept so sbatch --output=logs/... works)
+logs/*
+!logs/.gitkeep
+
+# wandb
+wandb/
+
+# IDE / editors
+.vscode/
+.idea/
+
+# Local secrets (API keys for remote judges, etc.) — loaded by scripts/env.sh
+.env
+.env.local

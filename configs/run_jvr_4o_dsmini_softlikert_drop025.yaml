@@ -1,0 +1,57 @@
+# Medicine (RaR-Medicine -> HealthBench).
+# DS+Mini soft-Likert tau sweep (appendix): soft-Likert + drop, tau = 0.25.
+#
+# sbatch --export=ALL scripts/slurm/run_one_remote_judge.sbatch \
+#     --config configs/run_jvr_4o_dsmini_softlikert_drop025.yaml --train-gpus 8
+run_name: jvr_4o_dsmini_softlikert_drop025
+domain: medicine
+policy_model: Qwen/Qwen3-4B-Base
+
+n_train: 1000
+seed: 0
+rubric_path: null
+
+judge_api_key_env: OPENAI_API_KEY   # fallback for entries without explicit api_key_env
+
+judges:
+  - tag: ds
+    model: deepseek-ai/DeepSeek-V3.1
+    url: https://api.together.xyz/v1
+    api_key_env: TOGETHER_API_KEY
+    max_concurrent: 8
+    max_tokens: 32
+  - tag: mini
+    model: gpt-4o-mini
+    url: https://api.openai.com/v1
+    api_key_env: OPENAI_API_KEY
+    max_concurrent: 8
+    max_tokens: 32
+
+reward_type: ensemble_soft_likert_drop
+disagreement_threshold: 0.25   # matches drop025's proven threshold
+soft_likert_args:
+  top_logprobs: 5              # Together caps at 5; covers Likert 1-5 exactly
+
+num_generations: 8
+per_device_train_batch_size: 8
+
+learning_rate: 5.0e-6
+warmup_ratio: 0.1
+lr_scheduler_type: constant_with_warmup
+temperature: 1.0
+
+max_completion_length: 1024
+max_steps: 100
+save_steps: 100
+beta: 0.0
+scale_rewards: false
+
+use_vllm: true
+vllm_mode: colocate
+vllm_gpu_memory_utilization: 0.12
+vllm_max_model_length: 2304
+
+gradient_checkpointing: true
+optim: adamw_bnb_8bit
+
+report_to: wandb

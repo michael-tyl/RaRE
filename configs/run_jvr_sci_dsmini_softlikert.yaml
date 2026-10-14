@@ -1,0 +1,84 @@
+# Science (RaR-Science -> GPQA Diamond); run with --seed 0..4.
+# DeepSeek + gpt-4o-mini soft-Likert ensemble, no drop (tau = 1.0 never
+# masks); the 'none' row of the GPQA tau sweep.
+#
+# sbatch --export=ALL scripts/slurm/run_one_remote_judge.sbatch \
+#     --config configs/run_jvr_sci_dsmini_softlikert.yaml --train-gpus 4 --seed N
+run_name: jvr_sci_dsmini_softlikert
+domain: science
+policy_model: Qwen/Qwen3-4B-Base
+
+n_train: 1000
+seed: 0
+rubric_path: null
+
+judge_api_key_env: OPENROUTER_API_KEY
+
+judges:
+  # DeepSeek-V3.1 as a hard judge: its integer rating is used as a one-hot
+  # distribution (confidence 1), as in the original science runs.
+  - tag: ds
+    model: deepseek/deepseek-chat-v3.1
+    url: https://openrouter.ai/api/v1
+    api_key_env: OPENROUTER_API_KEY
+    max_concurrent: 8
+    max_tokens: 32
+    temperature: 0.0
+    response_format: json_schema
+    extra_body:
+      reasoning:
+        enabled: false
+      provider:
+        only: [coreweave/fp8]
+        allow_fallbacks: false
+        require_parameters: true
+    rating_mode: hard
+  # gpt-4o-mini as a soft judge (top-5 logprobs at the rating digit).
+  - tag: mini
+    model: openai/gpt-4o-mini
+    url: https://openrouter.ai/api/v1
+    api_key_env: OPENROUTER_API_KEY
+    max_concurrent: 8
+    max_tokens: 32
+    temperature: 0.0
+    extra_body:
+      provider:
+        only: [openai]
+        allow_fallbacks: false
+        require_parameters: true
+
+reward_type: ensemble_soft_likert_drop
+disagreement_threshold: 1.0
+soft_likert_args:
+  top_logprobs: 5
+  scale_max: 5
+  confidence_mode: inverse_var
+  aggregation: weighted_avg
+  strict_scores: true   # required for the hard judge; audit logs go to $RAR_OUT/judge_logs/<run>
+
+num_generations: 8
+# 8 rollouts per GPU so each GRPO group of 8 is scored in one reward call
+# (the drop mask substitutes the group mean within a reward call). With
+# --train-gpus 4 this is 32 rollouts (4 prompts) per step.
+per_device_train_batch_size: 8
+
+learning_rate: 5.0e-6
+warmup_ratio: 0.1
+lr_scheduler_type: constant_with_warmup
+temperature: 1.0
+
+max_completion_length: 1024
+max_steps: 100
+save_steps: 100
+beta: 0.0
+scale_rewards: false
+
+use_vllm: true
+vllm_mode: colocate
+vllm_gpu_memory_utilization: 0.12
+vllm_max_model_length: 2304
+
+gradient_checkpointing: true
+optim: adamw_bnb_8bit
+
+report_to: wandb
