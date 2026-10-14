@@ -226,4 +226,4 @@ src/rar/cost_audit.py    (`strict_scores`, `audit_log_dir` in a config)
 
 ## Notes
 
-- Soft-Likert needs judge logprobs. DeepSeek-V3.1 served by Together returns them, but this endpoint is no longer supported.
+- Soft-Likert needs judge logprobs. DeepSeek-V3.1 served by Together returns them (used in the original experiments), but this endpoint is no longer supported.
