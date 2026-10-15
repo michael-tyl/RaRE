@@ -1,6 +1,8 @@
 # Judging the Judges: Confidence and Disagreement in Rubrics as Rewards
 
-Code for **RaRE** (Rubrics as Rewards with Ensembles). Project page:
+Code for **RaRE** (Rubrics as Rewards with Ensembles). 
+
+Project page:
 https://anneharrington.github.io/judging-the-judges/
 
 [Rubrics as Rewards](https://arxiv.org/abs/2507.17746) (RaR) trains on
