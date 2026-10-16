@@ -235,10 +235,13 @@ src/rar/cost_audit.py    (`strict_scores`, `audit_log_dir` in a config)
 If you find this code useful, please cite:
 
 ```bibtex
-@article{liu2026judging,
-  title   = {Judging the Judges: Confidence and Disagreement in Rubrics as Rewards},
-  author  = {Liu, Michael Tian-Yue and Harrington, Anne and Darrell, Trevor and Bai, Yutong},
-  journal = {arXiv preprint arXiv:2610.21179},
-  year    = {2026}
+@misc{liu2026judgingjudgesconfidencedisagreement,
+      title={Judging the Judges: Confidence and Disagreement in Rubrics as Rewards}, 
+      author={Michael Tian-Yue Liu and Anne Harrington and Trevor Darrell and Yutong Bai},
+      year={2026},
+      eprint={2610.21179},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2610.21179}, 
 }
 ```
