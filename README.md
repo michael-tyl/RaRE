@@ -229,3 +229,16 @@ src/rar/cost_audit.py    (`strict_scores`, `audit_log_dir` in a config)
 ## Notes
 
 - Soft-Likert needs judge logprobs. DeepSeek-V3.1 served by Together returns them (used in the original experiments), but this endpoint is no longer supported.
+
+## Citation
+
+If you find this code useful, please cite:
+
+```bibtex
+@article{liu2026judging,
+  title   = {Judging the Judges: Confidence and Disagreement in Rubrics as Rewards},
+  author  = {Liu, Michael Tian-Yue and Harrington, Anne and Darrell, Trevor and Bai, Yutong},
+  journal = {arXiv preprint arXiv:2610.21179},
+  year    = {2026}
+}
+```
